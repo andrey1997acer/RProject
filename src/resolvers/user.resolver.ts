@@ -14,7 +14,6 @@ import {
 import { hash, compare } from "bcryptjs";
 import { User } from "../entities/user";
 
-import enviroment from "../config/enviroments.config";
 import { sign } from "jsonwebtoken";
 
 import { isAuthenticated } from "../middleware/is-authenticated";
@@ -101,7 +100,7 @@ export class UserResolver {
         }
 
         return {
-            accessToken: sign({ user: user }, enviroment.jwtSecretKey, {
+            accessToken: sign({ user: user },process.env.JWT_SECRET_KEY ?? '', {
                 expiresIn: "10h"
             })
         };

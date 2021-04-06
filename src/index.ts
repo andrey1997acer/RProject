@@ -1,14 +1,21 @@
 import "reflect-metadata";
 import * as dotenv from 'dotenv';
-import { startServer } from "./app";
-import { connect } from "./config/typeorm.config";
+import { startApolloServer } from "./app";
+import { connect as connectToDB } from "./config/typeorm.config";
+
+
+dotenv.config({
+    path: __dirname + '/.env'
+});
 
 async function main() {
-    dotenv.config();
-    connect();
-    const app = await startServer();
-    app.listen(3000);
-    console.log("Server  Listening on http://localhost:"+ 3000);
-
+    const port =  Number(process.env.PORT) || 4000;
+    connectToDB();
+    const app = await startApolloServer();
+    app.listen({port}, ()=>{
+        console.log(`Server  Listening on http://localhost:${port}/graphql`);
+    });
 }
+
 main();
+

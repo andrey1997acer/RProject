@@ -6,6 +6,7 @@ export class PingResolver{
     ping(){
         return "Pong!";
     }
+    
     @Mutation(() => String)
     async hello(
         @Arg("name") name: string) {

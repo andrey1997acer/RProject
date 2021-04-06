@@ -2,7 +2,6 @@
 import { AuthChecker } from "type-graphql"
 import { Context } from "../interfaces/context.interface";
 import { verify } from "jsonwebtoken";
-import enviroment from "../config/enviroments.config";
 import { User } from "../entities/user";
 export const isAuthorizated: AuthChecker<Context> = ({ context }, roles) => {
 
@@ -16,7 +15,7 @@ export const isAuthorizated: AuthChecker<Context> = ({ context }, roles) => {
     }
     try {
         const token = authorization.replace("bearer ", "");
-        const payload = verify(token, enviroment.jwtSecretKey ?? '');
+        const payload = verify(token, process.env.JWT_SECRET_KEY ?? '');
         context.user = payload as User;
     } catch (err) {
         console.log(err);

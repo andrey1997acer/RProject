@@ -1,3 +1,4 @@
 node_modules/
-.env
+src/*.env
 package-lock.json
+src/config/ca-certificate.crt

@@ -1,15 +1,20 @@
 import { createConnection } from "typeorm";
 import path = require("path")
-import  enviroment   from "./enviroments.config";
+// import  {databaseUserName,databaseHost,databaseName,databasePassword,databasePort,jwtSecretKey}   from "./enviroments.config";
+import fs from 'fs'
 
 export async function connect() { 
+   
     await createConnection({
-        type: 'mysql',
-        host: enviroment.databaseHost,
-        port: enviroment.databasePort,
-        username: enviroment.databaseUserName,
-        password: enviroment.databasePassword,
-        database: enviroment.databaseName,
+        type: 'mysql', 
+        host: process.env.DATABASE_HOST,
+        port: Number(process.env.DATABASE_PORT),
+        username: process.env.DATABASE_USERNAME,
+        password: process.env.DATABASE_PASSWORD,
+        database: process.env.DATABASE_NAME,
+        ssl: {
+            ca: fs.readFileSync(__dirname + '/ca-certificate.crt'),
+        },
         entities: [
             path.join(__dirname, '../entities/**/**.ts')
         ],

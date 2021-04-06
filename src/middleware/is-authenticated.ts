@@ -1,7 +1,6 @@
 import { MiddlewareFn } from "type-graphql";
 import { verify } from "jsonwebtoken";
 import { Context } from "../interfaces/context.interface"; 
-import  enviroment   from "../config/enviroments.config";
 import { User } from "../entities/user"; 
 
 export const isAuthenticated: MiddlewareFn<Context> = ({ context }, next) => {
@@ -16,7 +15,7 @@ export const isAuthenticated: MiddlewareFn<Context> = ({ context }, next) => {
   }
   try { 
     const token = authorization.replace("bearer ",""); 
-    const payload = verify(token, enviroment.jwtSecretKey ?? ''); 
+    const payload = verify(token, process.env.JWT_SECRET_KEY ?? ''); 
     context.user = payload as User;
   } catch (err) {
     console.log(err);
