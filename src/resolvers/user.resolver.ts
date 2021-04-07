@@ -51,16 +51,26 @@ export class UserResolver {
         @Arg("id", () => Int) id: number,
         @Arg("data", () => UserInput) data: UserInput
     ) {
-        await User.update({ id }, data);
+        const res = await User.update({ id }, data);
+        console.log(res);
+        
         const dataUpdated = await User.findOne(id);
         return dataUpdated;
+    }
+
+    @Authorized("ADMIN")
+    @Mutation(() => Boolean)
+    async deleteUser(
+        @Arg("id", () => Int) id: number
+    ) {
+        await User.delete({ id });
+        return true;
     }
 
     @Query(() => String)
     @UseMiddleware(isAuthenticated)
     async Me(@Ctx() { user }: Context) {
         console.log(JSON.stringify(user));
-
         return `Your user id : ${user!.id}`;
     }
 
@@ -69,7 +79,12 @@ export class UserResolver {
         @Arg("name") name: string,
         @Arg("email") email: string,
         @Arg("password") password: string
+
     ) {
+        const existEmail = await User.findOne({email});
+        if(existEmail){
+            throw Error("This email already exists");
+        }
         const hashedPassword = await hash(password, 13);
         try {
             await User.insert({
@@ -88,7 +103,7 @@ export class UserResolver {
     @Mutation(() => LoginResponse)
     async Login(@Arg("email") email: string, @Arg("password") password: string) {
         const user = await User.findOne({ where: { email } });
-
+       
         if (!user) {
             throw new Error("Could not find user");
         }
