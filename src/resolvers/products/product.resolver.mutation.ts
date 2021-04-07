@@ -1,8 +1,8 @@
 import { Arg, Authorized, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Int } from "type-graphql";
 
-import { Product } from "../entities/product";
-import { RolesTypes } from "../entities/user";
+import { Product } from "../../entities/product";
+import { RolesTypes } from "../../entities/user";
 
 @InputType()
 class ProductInput {
@@ -13,7 +13,7 @@ class ProductInput {
 }
 
 @Resolver()
-export class ProductResolver {
+export class ProductResolverMutation {
     @Authorized()
     @Mutation(() => Product)
     async createProduct(

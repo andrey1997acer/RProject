@@ -1,17 +1,17 @@
 import { createConnection } from "typeorm";
 import path = require("path")
-// import  {databaseUserName,databaseHost,databaseName,databasePassword,databasePort,jwtSecretKey}   from "./enviroments.config";
+import  {databaseUserName,databaseHost,databaseName,databasePassword,databasePort}   from "./enviroments.config";
 import fs from 'fs'
 
 export async function connect() { 
-   
+   try{
     await createConnection({
         type: 'mysql', 
-        host: process.env.DATABASE_HOST,
-        port: Number(process.env.DATABASE_PORT),
-        username: process.env.DATABASE_USERNAME,
-        password: process.env.DATABASE_PASSWORD,
-        database: process.env.DATABASE_NAME,
+        host: databaseHost,
+        port: Number(databasePort),
+        username: databaseUserName,
+        password: databasePassword,
+        database: databaseName,
         ssl: {
             ca: fs.readFileSync(__dirname + '/ca-certificate.crt'),
         },
@@ -31,7 +31,14 @@ export async function connect() {
         },
         logging: false,
         synchronize: true
+    }).then((res)=>{
+        console.log('Database connected successfully');
+        
     });
-    console.log("Database is connected");
+    
+}catch(e){
+    console.log(`Error ${e}`);
+    
+}
 
 }

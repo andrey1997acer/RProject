@@ -12,13 +12,13 @@ import {
     Authorized
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
-import { User } from "../entities/user";
+import { User } from "../../entities/user";
 
 import { sign } from "jsonwebtoken";
 
-import { isAuthenticated } from "../middleware/is-authenticated";
-import { Context } from "../interfaces/context.interface";
-import { RolesTypes } from "../entities/user"
+import { isAuthenticated } from "../../middleware/is-authenticated";
+import { Context } from "../../interfaces/context.interface";
+import { RolesTypes } from "../../entities/user"
 
 @ObjectType()
 class LoginResponse {
@@ -40,11 +40,8 @@ class UserInput {
 
 
 @Resolver()
-export class UserResolver {
-    @Query(() => [User])
-    async users() {
-        return User.find();
-    }
+export class UserResolverMutation {
+   
     @Authorized("ADMIN")
     @Mutation(() => User)
     async updateUser(
@@ -67,12 +64,6 @@ export class UserResolver {
         return true;
     }
 
-    @Query(() => String)
-    @UseMiddleware(isAuthenticated)
-    async Me(@Ctx() { user }: Context) {
-        console.log(JSON.stringify(user));
-        return `Your user id : ${user!.id}`;
-    }
 
     @Mutation(() => Boolean)
     async Register(

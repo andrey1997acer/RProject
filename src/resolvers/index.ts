@@ -1,4 +1,4 @@
 import { NonEmptyArray } from "type-graphql";
-import { ProductResolver } from "./product.resolver";
-import { UserResolver } from './user.resolver';
-export const  RESOLVERS :NonEmptyArray<Function>  = [ ProductResolver, UserResolver];
+import { productResolver } from "./products";
+import { userResolver } from "./users";
+export const  RESOLVERS :NonEmptyArray<Function>  = [...userResolver, ...productResolver];
