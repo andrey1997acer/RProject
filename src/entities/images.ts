@@ -1,29 +1,36 @@
 import { Field, ObjectType } from "type-graphql";
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import { TypeormLoader } from "type-graphql-dataloader";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, BaseEntity, RelationId} from "typeorm";
 import {Product} from "./product";
 
 @ObjectType()
 @Entity()
-export class Image {
+export class Image extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     @Field()
-    id!: number;
+    id: number;
 
     @Column()
     @Field()
-    url!: string;
+    url: string;
 
     @Column()
     @Field()
-    name!: string;
+    name: string;
 
     @Column()
     @Field()
-    description!: string;
+    description: string;
 
     @Field(()=>Product)
     @ManyToOne(() => Product, product => product.images)
-    product!: Product;
+    @TypeormLoader((image:Image)=>image.productId)
+    product: Product;
+    
+    @RelationId((image: Image) => image.product)
+    productId: number;
+
+
 
 }

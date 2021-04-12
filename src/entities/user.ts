@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from "typeorm";
 import { ObjectType, Field, ID, Authorized, registerEnumType } from "type-graphql";
+import { Review } from "./reviews";
 
 export enum RolesTypes {
     NONE = "",
@@ -30,28 +31,32 @@ registerEnumType(RolesTypes, {
 export class User extends BaseEntity {
     @Field(() => ID)
     @PrimaryGeneratedColumn()
-    id!: number;
+    id: number;
 
     @Authorized()
     @Field(() => String)
     @Column("text", { nullable: true })
-    name!: string;
+    name: string;
 
     @Authorized([RolesTypes.ADMIN, RolesTypes.MODERATOR])
     @Field(() => String)
     @Column("text", { nullable: true })
-    notes!: string;
+    notes: string;
 
     @Field(() => String)
     @Column("text", { nullable: true })
-    email!: string;
+    email: string;
+
+    @Field(()=>Review)
+    @OneToMany(() => Review, review => review.product)
+    reviews: Review[];
 
     @Field(() => String)
     @Column("text", { nullable: true })
-    password!: string;
+    password: string;
 
     @Authorized(RolesTypes.ADMIN)
     @Field(type => RolesTypes)
     @Column("text", { nullable: true })
-    role!: RolesTypes;
+    role: RolesTypes;
 }

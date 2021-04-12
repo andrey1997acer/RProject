@@ -1,12 +1,11 @@
 import { Arg, Authorized, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Int } from "type-graphql";
-import { Image } from "../../entities/images";
 
-import { Product } from "../../entities/product";
+import { Review } from "../../entities/reviews";
 import { RolesTypes } from "../../entities/user";
 
 @InputType()
-class ProductInput {
+class ReviewInput {
     @Field()
     name!: string
     @Field()
@@ -14,46 +13,46 @@ class ProductInput {
 }
 
 @Resolver()
-export class ProductResolverMutation {
+export class ReviewResolverMutation {
     @Authorized()
-    @Mutation(() => Product)
-    async createProduct(
-        @Arg("data", () => ProductInput) data: ProductInput
+    @Mutation(() => Review)
+    async createReview(
+        @Arg("data", () => ReviewInput) data: ReviewInput
     ) {
-        const newData = Product.create(data);
+        const newData = Review.create(data);
         return await newData.save();
     }
 
     @Authorized()
-    @Mutation(() => Product)
-    async updateProduct(
+    @Mutation(() => Review)
+    async updateReview(
         @Arg("id", () => Int) id: number,
-        @Arg("data", () => ProductInput) data: ProductInput
+        @Arg("data", () => ReviewInput) data: ReviewInput
     ) {
-        await Product.update({ id }, data);
-        const dataUpdated = await Product.findOne(id)
+        await Review.update({ id }, data);
+        const dataUpdated = await Review.findOne(id)
         return dataUpdated;
     }
 
     @Authorized(RolesTypes.ADMIN)
     @Mutation(() => Boolean)
-    async deleteProduct(
+    async deleteReview(
         @Arg("id", () => Int) id: number
     ) {
-        await Product.delete(id);
+        await Review.delete(id);
         return true;
     }
 
-    @Query(() => [Product])
-    products() {
-        return Product.find()
+    @Query(() => [Review])
+    Reviews() {
+        return Review.find()
     }
 
-    @Query(() => [Product])
-    productById(
+    @Query(() => [Review])
+    ReviewById(
         @Arg("id", () => Int) id: number
     ) {
-        return Product.findOne(
+        return Review.findOne(
             {
                 where: {
                     id
